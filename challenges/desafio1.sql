@@ -1,23 +1,56 @@
--- Descomente e altere as linhas abaixo:
+DROP DATABASE IF EXISTS SpotifyClone;
+CREATE DATABASE IF NOT EXISTS SpotifyClone;
 
--- DROP DATABASE IF EXISTS SpotifyClone;
--- CREATE DATABASE IF NOT EXISTS SpotifyClone;
--- CREATE TABLE SpotifyClone.tabela1(
---     coluna1 tipo restricoes,
---     coluna2 tipo restricoes,
---     colunaN tipo restricoes,
--- ) engine = InnoDB;
--- CREATE TABLE SpotifyClone.tabela2(
---     coluna1 tipo restricoes,
---     coluna2 tipo restricoes,
---     colunaN tipo restricoes,
--- ) engine = InnoDB;
--- INSERT INTO SpotifyClone.tabela1 (coluna1, coluna2)
--- VALUES
---   ('exemplo de dados 1', 'exemplo de dados A'),
---   ('exemplo de dados 2', 'exemplo de dados B'),
---   ('exemplo de dados 3', 'exemplo de dados C');
--- INSERT INTO SpotifyClone.tabela2 (coluna1, coluna2)
--- VALUES
---   ('exemplo de dados 1', 'exemplo de dados X'),
---   ('exemplo de dados 2', 'exemplo de dados Y');
+USE SpotifyClone;
+
+CREATE TABLE artistas(
+     artista_id INT PRIMARY KEY AUTO_INCREMENT,
+     artista_nome VARCHAR(50) NOT NULL
+ ) engine = InnoDB;
+ 
+ CREATE TABLE planos(
+     plano_id INT PRIMARY KEY AUTO_INCREMENT,
+     plano_nome VARCHAR(50) NOT NULL,
+     plano_valor DECIMAL(2,2) NOT NULL
+ ) engine = InnoDB;
+ 
+  CREATE TABLE albuns(
+     album_id INT PRIMARY KEY AUTO_INCREMENT,
+     album_nome VARCHAR(50) NOT NULL,
+     ano_lancamento INT NOT NULL,
+     artista_id INT NOT NULL,
+     FOREIGN KEY (artista_id) REFERENCES artistas(artista_id)
+ ) engine = InnoDB;
+ 
+   CREATE TABLE cancoes(
+     cancao_id INT PRIMARY KEY AUTO_INCREMENT,
+     cancao_nome VARCHAR(50) NOT NULL,
+     duracao_segundos INT NOT NULL,
+     album_id INT NOT NULL,
+     FOREIGN KEY (album_id) REFERENCES albuns(album_id)
+ ) engine = InnoDB;
+ 
+    CREATE TABLE usuarios(
+     usuario_id INT PRIMARY KEY AUTO_INCREMENT,
+     usuario_nome VARCHAR(50) NOT NULL,
+     idade INT NOT NULL,
+     plano_id INT NOT NULL,
+     FOREIGN KEY (plano_id) REFERENCES planos(plano_id)
+ ) engine = InnoDB;
+ 
+	 CREATE TABLE historico(
+     usuario_id INT NOT NULL,
+     cancao_id INT NOT NULL,
+     PRIMARY KEY (usuario_id, cancao_id),
+     FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id),
+     FOREIGN KEY (cancao_id) REFERENCES cancoes(cancao_id),
+     data_reproducao DATE NOT NULL
+ ) engine = InnoDB;
+ 
+ 	 CREATE TABLE seguidores(
+     usuario_id INT NOT NULL,
+     artista_id INT NOT NULL,
+     PRIMARY KEY (usuario_id, artista_id),
+     FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id),
+     FOREIGN KEY (artista_id) REFERENCES artistas(artista_id)
+ ) engine = InnoDB;
